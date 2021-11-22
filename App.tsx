@@ -10,15 +10,15 @@ import {
   Image,
 } from "react-native";
 import { Camera } from "expo-camera";
-let camera: Camera;
+let camera: Camera | null;
 
 export default function App() {
   const [startCamera, setStartCamera] = React.useState(false);
 
   const __startCamera = async () => {
-    const { status } = await Camera.requestPermissionsAsync();
+    const { status } = await Camera.requestCameraPermissionsAsync();
     if (status === "granted") {
-      // do something
+      setStartCamera(true);
     } else {
       Alert.alert("Access denied");
     }
@@ -36,13 +36,14 @@ export default function App() {
       >
         {startCamera ? (
           <Camera
-            style={{ flex: 1, width: "100%" }}
+            style={{ flex: 1, width: 500 }}
             ref={(r) => {
               camera = r;
             }}
           ></Camera>
         ) : (
           <TouchableOpacity
+            onPress={__startCamera}
             style={{
               width: 130,
               borderRadius: 4,
